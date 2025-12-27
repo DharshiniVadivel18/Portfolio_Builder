@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: portfolio-builder
+    env: node
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        fromDatabase:
+          name: portfolio-db
+          property: connectionString
+
+databases:
+  - name: portfolio-db
+    databaseName: portfolio-builder
+    user: portfolio-user

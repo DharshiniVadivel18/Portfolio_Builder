@@ -12,10 +12,15 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
+// MongoDB connection with error handling
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((error) => {
+  console.error('MongoDB connection error:', error);
+  process.exit(1);
 });
 
 // User Schema
@@ -149,10 +154,24 @@ app.get('/api/portfolios', auth, async (req, res) => {
 // Serve static files from React app in production
 if (process.env.NODE_ENV === 'production') {
   const path = require('path');
-  app.use(express.static(path.join(__dirname, 'client/build')));
+  const buildPath = path.join(__dirname, 'client/build');
   
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  // Check if build directory exists
+  const fs = require('fs');
+  if (fs.existsSync(buildPath)) {
+    app.use(express.static(buildPath));
+    
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(buildPath, 'index.html'));
+    });
+  } else {
+    app.get('*', (req, res) => {
+      res.status(404).json({ error: 'Build files not found. Run npm run build first.' });
+    });
+  }
+} else {
+  app.get('/', (req, res) => {
+    res.json({ message: 'Portfolio Builder API is running' });
   });
 }
 
