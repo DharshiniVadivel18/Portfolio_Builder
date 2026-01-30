@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const Signup = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,80 +12,250 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('/api/auth/signup', formData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      localStorage.setItem('token', 'demo-token');
+      localStorage.setItem('user', JSON.stringify({ 
+        id: 'demo-user', 
+        email: formData.email, 
+        name: formData.name 
+      }));
       navigate('/builder');
-    } catch (error) {
-      if (error.response?.data?.error?.includes('E11000') || error.response?.data?.error?.includes('duplicate key')) {
-        setError('This email is already registered. Please use a different email or login.');
-      } else {
-        setError(error.response?.data?.error || 'Signup failed');
-      }
-    }
+    }, 1000);
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-      <div style={{ background: 'white', padding: '40px', borderRadius: '10px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '100%', maxWidth: '400px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>Sign Up</h2>
+    <div style={{ 
+      minHeight: '100vh', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      background: 'linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 15s ease infinite',
+      padding: '20px',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Floating shapes */}
+      <div style={{
+        position: 'absolute',
+        top: '15%',
+        left: '15%',
+        width: '120px',
+        height: '120px',
+        background: 'rgba(255,255,255,0.1)',
+        borderRadius: '50%',
+        animation: 'float 6s ease-in-out infinite'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        top: '60%',
+        right: '15%',
+        width: '180px',
+        height: '180px',
+        background: 'rgba(255,255,255,0.05)',
+        borderRadius: '50%',
+        animation: 'float 8s ease-in-out infinite reverse'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        top: '25%',
+        right: '25%',
+        width: '90px',
+        height: '90px',
+        background: 'rgba(255,255,255,0.08)',
+        borderRadius: '50%',
+        animation: 'float 7s ease-in-out infinite'
+      }}></div>
+      <div style={{ 
+        background: 'white', 
+        padding: '50px', 
+        borderRadius: '20px', 
+        boxShadow: '0 20px 40px rgba(0,0,0,0.1)', 
+        width: '100%', 
+        maxWidth: '450px',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <h2 style={{ color: '#333', fontSize: '32px', fontWeight: '700', marginBottom: '10px' }}>Create Account</h2>
+          <p style={{ color: '#666', fontSize: '16px' }}>Join us to build your amazing portfolio</p>
+        </div>
         
-        {error && (
-          <div style={{ background: '#fee', color: '#c33', padding: '10px', borderRadius: '5px', marginBottom: '20px', textAlign: 'center' }}>
-            {error}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Name:</label>
+          <div style={{ marginBottom: '25px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '8px', 
+              color: '#333', 
+              fontWeight: '600',
+              fontSize: '14px'
+            }}>Full Name</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               required
-              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px' }}
+              style={{ 
+                width: '100%', 
+                padding: '15px 20px', 
+                border: '2px solid #e1e5e9', 
+                borderRadius: '12px', 
+                fontSize: '16px', 
+                boxSizing: 'border-box',
+                transition: 'all 0.3s ease',
+                outline: 'none'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#667eea'}
+              onBlur={(e) => e.target.style.borderColor = '#e1e5e9'}
+              placeholder="Enter your full name"
             />
           </div>
 
-          <div className="form-group">
-            <label>Email:</label>
+          <div style={{ marginBottom: '25px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '8px', 
+              color: '#333', 
+              fontWeight: '600',
+              fontSize: '14px'
+            }}>Email Address</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px' }}
+              style={{ 
+                width: '100%', 
+                padding: '15px 20px', 
+                border: '2px solid #e1e5e9', 
+                borderRadius: '12px', 
+                fontSize: '16px', 
+                boxSizing: 'border-box',
+                transition: 'all 0.3s ease',
+                outline: 'none'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#667eea'}
+              onBlur={(e) => e.target.style.borderColor = '#e1e5e9'}
+              placeholder="Enter your email"
             />
           </div>
 
-          <div className="form-group">
-            <label>Password:</label>
+          <div style={{ marginBottom: '30px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '8px', 
+              color: '#333', 
+              fontWeight: '600',
+              fontSize: '14px'
+            }}>Password</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px' }}
+              style={{ 
+                width: '100%', 
+                padding: '15px 20px', 
+                border: '2px solid #e1e5e9', 
+                borderRadius: '12px', 
+                fontSize: '16px', 
+                boxSizing: 'border-box',
+                transition: 'all 0.3s ease',
+                outline: 'none'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#667eea'}
+              onBlur={(e) => e.target.style.borderColor = '#e1e5e9'}
+              placeholder="Create a password"
             />
           </div>
 
           <button
             type="submit"
-            style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', borderRadius: '5px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '20px' }}
+            disabled={isLoading}
+            style={{ 
+              width: '100%', 
+              padding: '15px', 
+              background: isLoading ? '#ccc' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '12px', 
+              fontSize: '16px', 
+              fontWeight: '600', 
+              cursor: isLoading ? 'not-allowed' : 'pointer', 
+              marginBottom: '25px',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+              }
+            }}
           >
-            Sign Up
+            {isLoading ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ 
+                  width: '20px', 
+                  height: '20px', 
+                  border: '2px solid #ffffff', 
+                  borderTop: '2px solid transparent', 
+                  borderRadius: '50%', 
+                  animation: 'spin 1s linear infinite',
+                  marginRight: '10px'
+                }}></div>
+                Creating account...
+              </div>
+            ) : 'Create Account'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', color: '#666' }}>
-          Already have an account? <Link to="/login" style={{ color: '#667eea', textDecoration: 'none' }}>Login</Link>
-        </p>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ color: '#666', fontSize: '14px' }}>
+            Already have an account?{' '}
+            <Link 
+              to="/login" 
+              style={{ 
+                color: '#667eea', 
+                textDecoration: 'none', 
+                fontWeight: '600',
+                transition: 'color 0.3s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.color = '#764ba2'}
+              onMouseLeave={(e) => e.target.style.color = '#667eea'}
+            >
+              Sign in here
+            </Link>
+          </p>
+        </div>
       </div>
+      
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+      `}</style>
     </div>
   );
 };

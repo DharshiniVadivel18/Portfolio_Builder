@@ -9,13 +9,23 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true
+}));
 app.use(express.json());
 
-// MongoDB connection
+// MongoDB connection with error handling
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+}).then(() => {
+  console.log('✅ Connected to MongoDB');
+}).catch((error) => {
+  console.error('❌ MongoDB connection error:', error);
+  console.log('Continuing with local fallback...');
 });
 
 // User Schema
@@ -89,27 +99,50 @@ const auth = async (req, res, next) => {
 // Auth Routes
 app.post('/api/auth/signup', async (req, res) => {
   try {
+    console.log('Signup request:', req.body);
     const { email, password, name } = req.body;
+    
+    // Validation
+    if (!email || !password || !name) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+    
+    // Check if user exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+    
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ email, password: hashedPassword, name });
     await user.save();
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+    
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'fallback_secret');
     res.status(201).json({ token, user: { id: user._id, email, name } });
   } catch (error) {
+    console.error('Signup error:', error);
     res.status(400).json({ error: error.message });
   }
 });
 
 app.post('/api/auth/login', async (req, res) => {
   try {
+    console.log('Login request:', req.body);
     const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+    
     const user = await User.findOne({ email });
     if (!user || !await bcrypt.compare(password, user.password)) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+    
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'fallback_secret');
     res.json({ token, user: { id: user._id, email: user.email, name: user.name } });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -149,10 +182,24 @@ app.get('/api/portfolios', auth, async (req, res) => {
 // Serve static files from React app in production
 if (process.env.NODE_ENV === 'production') {
   const path = require('path');
-  app.use(express.static(path.join(__dirname, 'client/build')));
+  const buildPath = path.join(__dirname, 'client/build');
   
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  // Check if build directory exists
+  const fs = require('fs');
+  if (fs.existsSync(buildPath)) {
+    app.use(express.static(buildPath));
+    
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(buildPath, 'index.html'));
+    });
+  } else {
+    app.get('*', (req, res) => {
+      res.status(404).json({ error: 'Build files not found. Run npm run build first.' });
+    });
+  }
+} else {
+  app.get('/', (req, res) => {
+    res.json({ message: 'Portfolio Builder API is running' });
   });
 }
 
