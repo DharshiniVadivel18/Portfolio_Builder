@@ -153,8 +153,16 @@ const Builder = () => {
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .container {
             max-width: 1200px;
@@ -164,10 +172,12 @@ const Builder = () => {
         .header {
             text-align: center;
             padding: 60px 0;
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
         .profile-img {
             width: 150px;
@@ -179,27 +189,32 @@ const Builder = () => {
         }
         .name {
             font-size: 2.5rem;
-            color: #333;
+            color: #fff;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         .position {
             font-size: 1.3rem;
-            color: #667eea;
+            color: #f0f8ff;
             margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .section {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
             padding: 40px;
             margin-bottom: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
         .section h2 {
-            color: #667eea;
+            color: #f0f8ff;
             font-size: 2rem;
             margin-bottom: 20px;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
             padding-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .skills {
             display: flex;
@@ -215,15 +230,18 @@ const Builder = () => {
             font-size: 0.9rem;
         }
         .project, .experience, .achievement, .certification {
-            background: #f8f9fa;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
             padding: 20px;
             margin-bottom: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
+            border-radius: 15px;
+            border-left: 4px solid rgba(255,255,255,0.5);
         }
         .project h3, .experience h3, .achievement h3, .certification h3 {
-            color: #333;
+            color: #f0f8ff;
             margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .social-links {
             display: flex;
@@ -232,16 +250,19 @@ const Builder = () => {
             margin-top: 20px;
         }
         .social-links a {
-            color: #667eea;
+            color: #f0f8ff;
             text-decoration: none;
             padding: 10px 20px;
-            border: 2px solid #667eea;
+            border: 2px solid rgba(255,255,255,0.3);
             border-radius: 25px;
             transition: all 0.3s;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
         }
         .social-links a:hover {
-            background: #667eea;
-            color: white;
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            transform: translateY(-2px);
         }
         .resume-btn {
             display: inline-block;
@@ -270,7 +291,7 @@ const Builder = () => {
             <h1 class="name">${data.name}</h1>
             <p class="position">${data.position}</p>
             <p>${data.introduction}</p>
-            ${data.resume ? `<a href="${data.resume}" class="resume-btn" target="_blank">Download Resume</a>` : ''}
+            ${data.resume ? `<a href="${data.resume}" class="resume-btn" target="_blank">View Resume</a>` : ''}
         </header>
 
         <section class="section">
