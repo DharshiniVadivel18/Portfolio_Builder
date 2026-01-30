@@ -530,7 +530,58 @@ const Builder = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', padding: '20px' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 20s ease infinite',
+      padding: '20px',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Animated background elements */}
+      <div style={{
+        position: 'absolute',
+        top: '5%',
+        left: '5%',
+        width: '200px',
+        height: '200px',
+        background: 'rgba(255,255,255,0.05)',
+        borderRadius: '50%',
+        animation: 'float 10s ease-in-out infinite'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        top: '60%',
+        right: '5%',
+        width: '300px',
+        height: '300px',
+        background: 'rgba(255,255,255,0.03)',
+        borderRadius: '50%',
+        animation: 'float 12s ease-in-out infinite reverse'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        top: '30%',
+        left: '70%',
+        width: '150px',
+        height: '150px',
+        background: 'rgba(255,255,255,0.04)',
+        borderRadius: '50%',
+        animation: 'float 8s ease-in-out infinite'
+      }}></div>
+      
+      <style>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-30px) rotate(180deg); }
+        }
+      `}</style>
       {/* Header */}
       <div style={{ 
         background: 'white', 

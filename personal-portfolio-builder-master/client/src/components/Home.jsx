@@ -75,11 +75,60 @@ const Home = () => {
       </header>
 
       <section style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(-45deg, #667eea 0%, #764ba2 100%)',
+        backgroundSize: '400% 400%',
+        animation: 'gradientShift 15s ease infinite',
         color: 'white',
         padding: '120px 20px',
-        textAlign: 'center'
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
+        {/* Floating particles */}
+        <div style={{
+          position: 'absolute',
+          top: '10%',
+          left: '10%',
+          width: '4px',
+          height: '4px',
+          background: 'rgba(255,255,255,0.6)',
+          borderRadius: '50%',
+          animation: 'particle 8s linear infinite'
+        }}></div>
+        <div style={{
+          position: 'absolute',
+          top: '20%',
+          right: '15%',
+          width: '6px',
+          height: '6px',
+          background: 'rgba(255,255,255,0.4)',
+          borderRadius: '50%',
+          animation: 'particle 10s linear infinite reverse'
+        }}></div>
+        <div style={{
+          position: 'absolute',
+          bottom: '20%',
+          left: '20%',
+          width: '5px',
+          height: '5px',
+          background: 'rgba(255,255,255,0.5)',
+          borderRadius: '50%',
+          animation: 'particle 12s linear infinite'
+        }}></div>
+        
+        <style>{`
+          @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          @keyframes particle {
+            0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+          }
+        `}</style>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <h1 style={{ fontSize: '3.5rem', fontWeight: '700', marginBottom: '20px', lineHeight: '1.2' }}>
             Build Your Dream Portfolio

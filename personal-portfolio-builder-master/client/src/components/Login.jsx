@@ -32,9 +32,44 @@ const Login = () => {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      padding: '20px'
+      background: 'linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 15s ease infinite',
+      padding: '20px',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Floating shapes */}
+      <div style={{
+        position: 'absolute',
+        top: '10%',
+        left: '10%',
+        width: '100px',
+        height: '100px',
+        background: 'rgba(255,255,255,0.1)',
+        borderRadius: '50%',
+        animation: 'float 6s ease-in-out infinite'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        top: '70%',
+        right: '10%',
+        width: '150px',
+        height: '150px',
+        background: 'rgba(255,255,255,0.05)',
+        borderRadius: '50%',
+        animation: 'float 8s ease-in-out infinite reverse'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        top: '20%',
+        right: '20%',
+        width: '80px',
+        height: '80px',
+        background: 'rgba(255,255,255,0.08)',
+        borderRadius: '50%',
+        animation: 'float 7s ease-in-out infinite'
+      }}></div>
       <div style={{ 
         background: 'white', 
         padding: '50px', 
@@ -182,6 +217,15 @@ const Login = () => {
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
         }
       `}</style>
     </div>
