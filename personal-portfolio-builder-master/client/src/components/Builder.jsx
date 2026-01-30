@@ -108,7 +108,6 @@ const Builder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const processedData = {
         ...formData,
         projects: formData.projects.map(project => ({
@@ -117,14 +116,239 @@ const Builder = () => {
         }))
       };
       
-      // Simulate API call
-      console.log('Portfolio data:', processedData);
-      alert('Portfolio created successfully!');
-      navigate('/');
+      // Generate HTML portfolio
+      const portfolioHTML = generatePortfolioHTML(processedData);
+      
+      // Create and download the file
+      const blob = new Blob([portfolioHTML], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${processedData.name.replace(/\s+/g, '_')}_Portfolio.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      alert('Portfolio generated and downloaded successfully!');
     } catch (error) {
       console.error('Error creating portfolio:', error);
       alert('Error creating portfolio. Please try again.');
     }
+  };
+
+  const generatePortfolioHTML = (data) => {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${data.name} - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 60px 0;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            object-fit: cover;
+            border: 5px solid #667eea;
+        }
+        .name {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .position {
+            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .section {
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .skill {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .project, .experience, .achievement, .certification {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .project h3, .experience h3, .achievement h3, .certification h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .social-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+        .social-links a:hover {
+            background: #667eea;
+            color: white;
+        }
+        .resume-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }
+        .resume-btn:hover {
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .name { font-size: 2rem; }
+            .section { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            ${data.profilePicture ? `<img src="${data.profilePicture}" alt="${data.name}" class="profile-img">` : ''}
+            <h1 class="name">${data.name}</h1>
+            <p class="position">${data.position}</p>
+            <p>${data.introduction}</p>
+            ${data.resume ? `<a href="${data.resume}" class="resume-btn" target="_blank">Download Resume</a>` : ''}
+        </header>
+
+        <section class="section">
+            <h2>About Me</h2>
+            <p>${data.about}</p>
+        </section>
+
+        ${data.languages.length > 0 ? `
+        <section class="section">
+            <h2>Skills & Technologies</h2>
+            <div class="skills">
+                ${data.languages.map(lang => `<span class="skill">${lang}</span>`).join('')}
+            </div>
+        </section>` : ''}
+
+        ${data.projects.length > 0 ? `
+        <section class="section">
+            <h2>Projects</h2>
+            ${data.projects.map(project => `
+                <div class="project">
+                    <h3>${project.name}</h3>
+                    <p>${project.description}</p>
+                    <p><strong>Technologies:</strong> ${project.languages}</p>
+                    ${project.link ? `<p><a href="${project.link}" target="_blank">View Project</a></p>` : ''}
+                </div>
+            `).join('')}
+        </section>` : ''}
+
+        ${data.experiences.some(exp => exp.company) ? `
+        <section class="section">
+            <h2>Experience</h2>
+            ${data.experiences.filter(exp => exp.company).map(exp => `
+                <div class="experience">
+                    <h3>${exp.role} at ${exp.company}</h3>
+                    <p><strong>Duration:</strong> ${exp.years}</p>
+                    ${exp.companyWebsite ? `<p><a href="${exp.companyWebsite}" target="_blank">Company Website</a></p>` : ''}
+                </div>
+            `).join('')}
+        </section>` : ''}
+
+        ${data.achievements.some(ach => ach.title) ? `
+        <section class="section">
+            <h2>Achievements</h2>
+            ${data.achievements.filter(ach => ach.title).map(ach => `
+                <div class="achievement">
+                    <h3>${ach.title}</h3>
+                    <p>${ach.description}</p>
+                    <p><strong>Date:</strong> ${ach.date}</p>
+                </div>
+            `).join('')}
+        </section>` : ''}
+
+        ${data.certifications.some(cert => cert.name) ? `
+        <section class="section">
+            <h2>Certifications</h2>
+            ${data.certifications.filter(cert => cert.name).map(cert => `
+                <div class="certification">
+                    <h3>${cert.name}</h3>
+                    <p><strong>Issuer:</strong> ${cert.issuer}</p>
+                    <p><strong>Date:</strong> ${cert.date}</p>
+                    ${cert.link ? `<p><a href="${cert.link}" target="_blank">View Certificate</a></p>` : ''}
+                </div>
+            `).join('')}
+        </section>` : ''}
+
+        ${Object.values(data.social).some(link => link) ? `
+        <section class="section">
+            <h2>Connect With Me</h2>
+            <div class="social-links">
+                ${data.social.github ? `<a href="${data.social.github}" target="_blank">GitHub</a>` : ''}
+                ${data.social.linkedin ? `<a href="${data.social.linkedin}" target="_blank">LinkedIn</a>` : ''}
+                ${data.social.facebook ? `<a href="${data.social.facebook}" target="_blank">Facebook</a>` : ''}
+                ${data.social.instagram ? `<a href="${data.social.instagram}" target="_blank">Instagram</a>` : ''}
+            </div>
+        </section>` : ''}
+    </div>
+</body>
+</html>`;
   };
 
   const nextStep = () => {
@@ -747,7 +971,7 @@ const Builder = () => {
                 e.target.style.boxShadow = '0 4px 15px rgba(40, 167, 69, 0.4)';
               }}
             >
-              🚀 Generate Portfolio
+              Generate Portfolio
             </button>
           ) : (
             <button
