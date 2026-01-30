@@ -32,23 +32,24 @@ const Login = () => {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      background: 'linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)',
-      backgroundSize: '400% 400%',
-      animation: 'gradientShift 15s ease infinite',
+      background: 'linear-gradient(-45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3)',
+      backgroundSize: '600% 600%',
+      animation: 'gradientWave 20s ease infinite',
       padding: '20px',
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* Floating shapes */}
+      {/* Animated geometric shapes */}
       <div style={{
         position: 'absolute',
         top: '10%',
         left: '10%',
         width: '100px',
         height: '100px',
-        background: 'rgba(255,255,255,0.1)',
-        borderRadius: '50%',
-        animation: 'float 6s ease-in-out infinite'
+        background: 'linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05))',
+        borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
+        animation: 'morphFloat 8s ease-in-out infinite',
+        filter: 'blur(1px)'
       }}></div>
       <div style={{
         position: 'absolute',
@@ -56,9 +57,10 @@ const Login = () => {
         right: '10%',
         width: '150px',
         height: '150px',
-        background: 'rgba(255,255,255,0.05)',
-        borderRadius: '50%',
-        animation: 'float 8s ease-in-out infinite reverse'
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))',
+        borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+        animation: 'morphFloat 12s ease-in-out infinite reverse',
+        filter: 'blur(2px)'
       }}></div>
       <div style={{
         position: 'absolute',
@@ -66,19 +68,48 @@ const Login = () => {
         right: '20%',
         width: '80px',
         height: '80px',
-        background: 'rgba(255,255,255,0.08)',
-        borderRadius: '50%',
-        animation: 'float 7s ease-in-out infinite'
+        background: 'linear-gradient(225deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08))',
+        borderRadius: '40% 60% 60% 40% / 60% 30% 70% 40%',
+        animation: 'morphFloat 10s ease-in-out infinite',
+        filter: 'blur(1.5px)'
       }}></div>
+      {/* Floating particles */}
+      {[...Array(15)].map((_, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          width: `${Math.random() * 6 + 2}px`,
+          height: `${Math.random() * 6 + 2}px`,
+          background: 'rgba(255,255,255,0.6)',
+          borderRadius: '50%',
+          animation: `sparkle ${Math.random() * 3 + 2}s linear infinite`,
+          animationDelay: `${Math.random() * 2}s`
+        }}></div>
+      ))}
       <div style={{ 
-        background: 'white', 
+        background: 'rgba(255,255,255,0.95)', 
         padding: '50px', 
-        borderRadius: '20px', 
-        boxShadow: '0 20px 40px rgba(0,0,0,0.1)', 
+        borderRadius: '25px', 
+        boxShadow: '0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.3)', 
         width: '100%', 
         maxWidth: '450px',
-        backdropFilter: 'blur(10px)'
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,255,255,0.2)',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
+        {/* Card glow effect */}
+        <div style={{
+          position: 'absolute',
+          top: '-50%',
+          left: '-50%',
+          width: '200%',
+          height: '200%',
+          background: 'conic-gradient(from 0deg, transparent, rgba(255,255,255,0.3), transparent)',
+          animation: 'cardGlow 4s linear infinite',
+          pointerEvents: 'none'
+        }}></div>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <h2 style={{ color: '#333', fontSize: '32px', fontWeight: '700', marginBottom: '10px' }}>Welcome Back</h2>
           <p style={{ color: '#666', fontSize: '16px' }}>Sign in to continue building your portfolio</p>
@@ -218,14 +249,38 @@ const Login = () => {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-        @keyframes gradientShift {
+        @keyframes gradientWave {
           0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
+          25% { background-position: 100% 50%; }
+          50% { background-position: 100% 100%; }
+          75% { background-position: 0% 100%; }
           100% { background-position: 0% 50%; }
         }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
+        @keyframes morphFloat {
+          0%, 100% { 
+            transform: translateY(0px) rotate(0deg);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+          }
+          25% {
+            transform: translateY(-20px) rotate(90deg);
+            border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+          }
+          50% {
+            transform: translateY(-40px) rotate(180deg);
+            border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+          }
+          75% {
+            transform: translateY(-20px) rotate(270deg);
+            border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+          }
+        }
+        @keyframes sparkle {
+          0%, 100% { opacity: 0; transform: scale(0); }
+          50% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes cardGlow {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
       `}</style>
     </div>

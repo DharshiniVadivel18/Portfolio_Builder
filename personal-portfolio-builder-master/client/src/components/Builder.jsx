@@ -532,23 +532,24 @@ const Builder = () => {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c)',
-      backgroundSize: '400% 400%',
-      animation: 'gradientShift 20s ease infinite',
+      background: 'linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe)',
+      backgroundSize: '600% 600%',
+      animation: 'gradientWave 25s ease infinite',
       padding: '20px',
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* Animated background elements */}
+      {/* Advanced animated background elements */}
       <div style={{
         position: 'absolute',
         top: '5%',
         left: '5%',
         width: '200px',
         height: '200px',
-        background: 'rgba(255,255,255,0.05)',
-        borderRadius: '50%',
-        animation: 'float 10s ease-in-out infinite'
+        background: 'linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02))',
+        borderRadius: '63% 37% 54% 46% / 55% 48% 52% 45%',
+        animation: 'morphFloat 15s ease-in-out infinite',
+        filter: 'blur(2px)'
       }}></div>
       <div style={{
         position: 'absolute',
@@ -556,9 +557,10 @@ const Builder = () => {
         right: '5%',
         width: '300px',
         height: '300px',
-        background: 'rgba(255,255,255,0.03)',
-        borderRadius: '50%',
-        animation: 'float 12s ease-in-out infinite reverse'
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01))',
+        borderRadius: '38% 62% 63% 37% / 70% 33% 67% 30%',
+        animation: 'morphFloat 18s ease-in-out infinite reverse',
+        filter: 'blur(3px)'
       }}></div>
       <div style={{
         position: 'absolute',
@@ -566,20 +568,55 @@ const Builder = () => {
         left: '70%',
         width: '150px',
         height: '150px',
-        background: 'rgba(255,255,255,0.04)',
-        borderRadius: '50%',
-        animation: 'float 8s ease-in-out infinite'
+        background: 'linear-gradient(225deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03))',
+        borderRadius: '49% 51% 52% 48% / 68% 34% 66% 32%',
+        animation: 'morphFloat 12s ease-in-out infinite',
+        filter: 'blur(1.5px)'
       }}></div>
+      {/* Floating geometric shapes */}
+      {[...Array(20)].map((_, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          width: `${Math.random() * 8 + 3}px`,
+          height: `${Math.random() * 8 + 3}px`,
+          background: `rgba(255,255,255,${Math.random() * 0.6 + 0.2})`,
+          borderRadius: Math.random() > 0.5 ? '50%' : '20%',
+          animation: `sparkle ${Math.random() * 4 + 3}s linear infinite`,
+          animationDelay: `${Math.random() * 3}s`
+        }}></div>
+      ))}
       
       <style>{`
-        @keyframes gradientShift {
+        @keyframes gradientWave {
           0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
+          25% { background-position: 100% 50%; }
+          50% { background-position: 100% 100%; }
+          75% { background-position: 0% 100%; }
           100% { background-position: 0% 50%; }
         }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-30px) rotate(180deg); }
+        @keyframes morphFloat {
+          0%, 100% { 
+            transform: translateY(0px) rotate(0deg) scale(1);
+            border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+          }
+          25% {
+            transform: translateY(-30px) rotate(90deg) scale(1.1);
+            border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
+          }
+          50% {
+            transform: translateY(-60px) rotate(180deg) scale(0.9);
+            border-radius: 20% 80% 30% 70% / 50% 60% 40% 50%;
+          }
+          75% {
+            transform: translateY(-30px) rotate(270deg) scale(1.05);
+            border-radius: 60% 40% 80% 20% / 30% 70% 30% 70%;
+          }
+        }
+        @keyframes sparkle {
+          0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+          50% { opacity: 1; transform: scale(1) rotate(180deg); }
         }
       `}</style>
       {/* Header */}

@@ -75,58 +75,85 @@ const Home = () => {
       </header>
 
       <section style={{
-        background: 'linear-gradient(-45deg, #667eea 0%, #764ba2 100%)',
-        backgroundSize: '400% 400%',
-        animation: 'gradientShift 15s ease infinite',
+        background: 'linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe)',
+        backgroundSize: '600% 600%',
+        animation: 'gradientWave 20s ease infinite',
         color: 'white',
         padding: '120px 20px',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden'
       }}>
-        {/* Floating particles */}
+        {/* Advanced floating elements */}
+        {[...Array(25)].map((_, i) => (
+          <div key={i} style={{
+            position: 'absolute',
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            width: `${Math.random() * 8 + 2}px`,
+            height: `${Math.random() * 8 + 2}px`,
+            background: `rgba(255,255,255,${Math.random() * 0.8 + 0.2})`,
+            borderRadius: Math.random() > 0.7 ? '50%' : `${Math.random() * 50}%`,
+            animation: `particle ${Math.random() * 15 + 10}s linear infinite`,
+            animationDelay: `${Math.random() * 5}s`
+          }}></div>
+        ))}
+        
+        {/* Large morphing shapes */}
         <div style={{
           position: 'absolute',
           top: '10%',
-          left: '10%',
-          width: '4px',
-          height: '4px',
-          background: 'rgba(255,255,255,0.6)',
-          borderRadius: '50%',
-          animation: 'particle 8s linear infinite'
+          left: '5%',
+          width: '150px',
+          height: '150px',
+          background: 'linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02))',
+          borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
+          animation: 'heroMorph 20s ease-in-out infinite',
+          filter: 'blur(2px)'
         }}></div>
         <div style={{
           position: 'absolute',
-          top: '20%',
-          right: '15%',
-          width: '6px',
-          height: '6px',
-          background: 'rgba(255,255,255,0.4)',
-          borderRadius: '50%',
-          animation: 'particle 10s linear infinite reverse'
-        }}></div>
-        <div style={{
-          position: 'absolute',
-          bottom: '20%',
-          left: '20%',
-          width: '5px',
-          height: '5px',
-          background: 'rgba(255,255,255,0.5)',
-          borderRadius: '50%',
-          animation: 'particle 12s linear infinite'
+          bottom: '10%',
+          right: '5%',
+          width: '200px',
+          height: '200px',
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01))',
+          borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+          animation: 'heroMorph 25s ease-in-out infinite reverse',
+          filter: 'blur(3px)'
         }}></div>
         
         <style>{`
-          @keyframes gradientShift {
+          @keyframes gradientWave {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
             100% { background-position: 0% 50%; }
           }
           @keyframes particle {
-            0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+            0% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+            100% { transform: translateY(-120vh) translateX(${Math.random() * 200 - 100}px) rotate(360deg); opacity: 0; }
+          }
+          @keyframes heroMorph {
+            0%, 100% { 
+              transform: translateY(0px) rotate(0deg) scale(1);
+              border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            }
+            25% {
+              transform: translateY(-20px) rotate(90deg) scale(1.2);
+              border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+            }
+            50% {
+              transform: translateY(-40px) rotate(180deg) scale(0.8);
+              border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+            }
+            75% {
+              transform: translateY(-20px) rotate(270deg) scale(1.1);
+              border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+            }
           }
         `}</style>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
