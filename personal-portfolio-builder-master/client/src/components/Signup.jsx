@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../api';
 
 const Signup = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,18 +11,14 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('/api/auth/signup', formData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      navigate('/builder');
-    } catch (error) {
-      if (error.response?.data?.error?.includes('E11000') || error.response?.data?.error?.includes('duplicate key')) {
-        setError('This email is already registered. Please use a different email or login.');
-      } else {
-        setError(error.response?.data?.error || 'Signup failed');
-      }
-    }
+    // Bypass backend and go directly to builder
+    localStorage.setItem('token', 'demo-token');
+    localStorage.setItem('user', JSON.stringify({ 
+      id: 'demo-user', 
+      email: formData.email, 
+      name: formData.name 
+    }));
+    navigate('/builder');
   };
 
   return (
@@ -32,46 +26,40 @@ const Signup = () => {
       <div style={{ background: 'white', padding: '40px', borderRadius: '10px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '100%', maxWidth: '400px' }}>
         <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>Sign Up</h2>
         
-        {error && (
-          <div style={{ background: '#fee', color: '#c33', padding: '10px', borderRadius: '5px', marginBottom: '20px', textAlign: 'center' }}>
-            {error}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Name:</label>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', color: '#333' }}>Name:</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               required
-              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px' }}
+              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px', boxSizing: 'border-box' }}
             />
           </div>
 
-          <div className="form-group">
-            <label>Email:</label>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', color: '#333' }}>Email:</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px' }}
+              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px', boxSizing: 'border-box' }}
             />
           </div>
 
-          <div className="form-group">
-            <label>Password:</label>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', color: '#333' }}>Password:</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px' }}
+              style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '16px', boxSizing: 'border-box' }}
             />
           </div>
 

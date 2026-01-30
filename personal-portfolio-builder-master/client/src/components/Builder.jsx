@@ -26,7 +26,7 @@ const Builder = () => {
   });
 
   const languageOptions = [
-    'HTML5', 'CSS3', 'JavaScript', 'TypeScript', 'Python', 'Java', 'React', 'Node', 'MongoDB', 'Express'
+    'HTML', 'CSS', 'JavaScript','C', 'C++', 'Python', 'Java', 'React', 'Node', 'MongoDB', 'Express'
   ];
 
   const handleInputChange = (e) => {
