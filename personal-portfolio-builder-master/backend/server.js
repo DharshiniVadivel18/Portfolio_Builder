@@ -15,8 +15,13 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// MongoDB connection with better error handling
+// MongoDB connection with file-based fallback
 const connectDB = async () => {
+  if (process.env.USE_FILE_DB === 'true') {
+    console.log('📁 Using file-based storage (no MongoDB required)');
+    return;
+  }
+  
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder', {
       useNewUrlParser: true,
@@ -27,11 +32,8 @@ const connectDB = async () => {
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error.message);
-    console.log('💡 Solutions:');
-    console.log('1. Install and start MongoDB locally: https://docs.mongodb.com/manual/installation/');
-    console.log('2. Or use MongoDB Atlas: https://www.mongodb.com/atlas');
-    console.log('3. Update MONGODB_URI in .env file with your connection string');
-    process.exit(1);
+    console.log('📁 Falling back to file-based storage');
+    process.env.USE_FILE_DB = 'true';
   }
 };
 
