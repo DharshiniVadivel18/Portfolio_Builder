@@ -15,13 +15,28 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-});
+// MongoDB connection with better error handling
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error('❌ MongoDB connection failed:', error.message);
+    console.log('💡 Solutions:');
+    console.log('1. Install and start MongoDB locally: https://docs.mongodb.com/manual/installation/');
+    console.log('2. Or use MongoDB Atlas: https://www.mongodb.com/atlas');
+    console.log('3. Update MONGODB_URI in .env file with your connection string');
+    process.exit(1);
+  }
+};
+
+// Connect to database
+connectDB();
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -29,6 +44,19 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   name: { type: String, required: true }
 }, { timestamps: true });
+
+// Handle MongoDB connection events
+mongoose.connection.on('connected', () => {
+  console.log('✅ Mongoose connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('❌ Mongoose connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('⚠️ Mongoose disconnected');
+});
 
 const User = mongoose.model('User', userSchema);
 
