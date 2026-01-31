@@ -15,13 +15,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// MongoDB connection with file-based fallback
+// MongoDB connection
 const connectDB = async () => {
-  if (process.env.USE_FILE_DB === 'true') {
-    console.log('📁 Using file-based storage (no MongoDB required)');
-    return;
-  }
-  
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder', {
       useNewUrlParser: true,
@@ -30,10 +25,11 @@ const connectDB = async () => {
       socketTimeoutMS: 45000,
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(`📊 Database: ${conn.connection.name}`);
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error.message);
-    console.log('📁 Falling back to file-based storage');
-    process.env.USE_FILE_DB = 'true';
+    console.log('💡 Make sure MongoDB is running: net start MongoDB');
+    process.exit(1);
   }
 };
 
