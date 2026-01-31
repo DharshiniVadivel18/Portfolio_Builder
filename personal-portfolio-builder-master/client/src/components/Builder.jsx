@@ -153,16 +153,42 @@ const Builder = () => {
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            color: #fff;
-            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            color: white;
+            background: #667eea;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .bubble {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        .bubble:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bubble:nth-child(2) { left: 20%; width: 20px; height: 20px; animation-delay: 2s; }
+        .bubble:nth-child(3) { left: 25%; width: 10px; height: 10px; animation-delay: 4s; }
+        .bubble:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; }
+        .bubble:nth-child(5) { left: 70%; width: 20px; height: 20px; animation-delay: 3s; }
+        .bubble:nth-child(6) { left: 80%; width: 120px; height: 120px; animation-delay: 7s; }
+        .bubble:nth-child(7) { left: 32%; width: 160px; height: 160px; animation-delay: 15s; }
+        .bubble:nth-child(8) { left: 55%; width: 20px; height: 20px; animation-delay: 4s; }
+        .bubble:nth-child(9) { left: 25%; width: 10px; height: 10px; animation-delay: 19s; }
+        .bubble:nth-child(10) { left: 90%; width: 160px; height: 160px; animation-delay: 11s; }
+        @keyframes float {
+            0% { opacity: 1; transform: translateY(100vh) scale(0); }
+            5% { opacity: 1; transform: translateY(90vh) scale(1); }
+            95% { opacity: 1; transform: translateY(-10vh) scale(1); }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
         }
         .container {
             max-width: 1200px;
@@ -173,8 +199,6 @@ const Builder = () => {
             text-align: center;
             padding: 60px 0;
             background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 25px;
             margin-bottom: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
@@ -189,32 +213,27 @@ const Builder = () => {
         }
         .name {
             font-size: 2.5rem;
-            color: #fff;
+            color: white;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         .position {
             font-size: 1.3rem;
-            color: #f0f8ff;
+            color: #e8f0ff;
             margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .section {
             background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.2);
             padding: 40px;
             margin-bottom: 30px;
             border-radius: 25px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
         .section h2 {
-            color: #f0f8ff;
+            color: white;
             font-size: 2rem;
             margin-bottom: 20px;
-            border-bottom: 3px solid rgba(255,255,255,0.3);
+            border-bottom: 3px solid white;
             padding-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .skills {
             display: flex;
@@ -230,18 +249,15 @@ const Builder = () => {
             font-size: 0.9rem;
         }
         .project, .experience, .achievement, .certification {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 15px;
-            border-left: 4px solid rgba(255,255,255,0.5);
+            border-left: 4px solid white;
         }
         .project h3, .experience h3, .achievement h3, .certification h3 {
-            color: #f0f8ff;
+            color: white;
             margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .social-links {
             display: flex;
@@ -250,18 +266,16 @@ const Builder = () => {
             margin-top: 20px;
         }
         .social-links a {
-            color: #f0f8ff;
+            color: white;
             text-decoration: none;
             padding: 10px 20px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid white;
             border-radius: 25px;
             transition: all 0.3s;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
         }
         .social-links a:hover {
-            background: rgba(255,255,255,0.2);
-            color: #fff;
+            background: white;
+            color: #667eea;
             transform: translateY(-2px);
         }
         .resume-btn {
@@ -285,6 +299,18 @@ const Builder = () => {
     </style>
 </head>
 <body>
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
     <div class="container">
         <header class="header">
             ${data.profilePicture ? `<img src="${data.profilePicture}" alt="${data.name}" class="profile-img">` : ''}
