@@ -153,7 +153,7 @@ const Builder = () => {
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            color: white;
+            color: #333;
             background: #667eea;
             min-height: 100vh;
             position: relative;
@@ -198,7 +198,7 @@ const Builder = () => {
         .header {
             text-align: center;
             padding: 60px 0;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.95);
             border-radius: 25px;
             margin-bottom: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
@@ -213,26 +213,26 @@ const Builder = () => {
         }
         .name {
             font-size: 2.5rem;
-            color: white;
+            color: #333;
             margin-bottom: 10px;
         }
         .position {
             font-size: 1.3rem;
-            color: #e8f0ff;
+            color: #667eea;
             margin-bottom: 20px;
         }
         .section {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.95);
             padding: 40px;
             margin-bottom: 30px;
             border-radius: 25px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
         .section h2 {
-            color: white;
+            color: #667eea;
             font-size: 2rem;
             margin-bottom: 20px;
-            border-bottom: 3px solid white;
+            border-bottom: 3px solid #667eea;
             padding-bottom: 10px;
         }
         .skills {
@@ -249,14 +249,14 @@ const Builder = () => {
             font-size: 0.9rem;
         }
         .project, .experience, .achievement, .certification {
-            background: rgba(255,255,255,0.1);
+            background: #f8f9fa;
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 15px;
-            border-left: 4px solid white;
+            border-left: 4px solid #667eea;
         }
         .project h3, .experience h3, .achievement h3, .certification h3 {
-            color: white;
+            color: #333;
             margin-bottom: 10px;
         }
         .social-links {
@@ -266,16 +266,16 @@ const Builder = () => {
             margin-top: 20px;
         }
         .social-links a {
-            color: white;
+            color: #667eea;
             text-decoration: none;
             padding: 10px 20px;
-            border: 2px solid white;
+            border: 2px solid #667eea;
             border-radius: 25px;
             transition: all 0.3s;
         }
         .social-links a:hover {
-            background: white;
-            color: #667eea;
+            background: #667eea;
+            color: white;
             transform: translateY(-2px);
         }
         .resume-btn {
