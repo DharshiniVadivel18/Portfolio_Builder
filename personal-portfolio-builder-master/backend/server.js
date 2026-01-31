@@ -19,29 +19,42 @@ app.use(express.json());
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder';
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    console.log(`🔗 Connecting to MongoDB...`);
+    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
     
     const conn = await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000,
+      serverSelectionTimeoutMS: isProduction ? 30000 : 5000,
       socketTimeoutMS: 45000,
       bufferCommands: false,
-      maxPoolSize: 10,
+      maxPoolSize: isProduction ? 10 : 5,
     });
     
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     console.log(`📊 Database: ${conn.connection.name}`);
     
-    // Test the connection
-    await mongoose.connection.db.admin().ping();
-    console.log('✅ MongoDB ping successful');
+    if (isProduction) {
+      // Test the connection in production
+      await mongoose.connection.db.admin().ping();
+      console.log('✅ MongoDB ping successful');
+    }
     
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error.message);
     
-    // Retry connection after 5 seconds
-    console.log('🔄 Retrying MongoDB connection in 5 seconds...');
-    setTimeout(connectDB, 5000);
+    if (process.env.NODE_ENV === 'production') {
+      // Retry connection in production
+      console.log('🔄 Retrying MongoDB connection in 5 seconds...');
+      setTimeout(connectDB, 5000);
+    } else {
+      // For local development
+      console.log('💡 Make sure MongoDB is running locally or use MongoDB Compass');
+      console.log('💡 Start MongoDB: net start MongoDB (as Administrator)');
+      process.exit(1);
+    }
   }
 };
 
