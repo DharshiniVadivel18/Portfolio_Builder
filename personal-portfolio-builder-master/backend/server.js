@@ -145,6 +145,20 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
+// Health check route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Portfolio Builder API is running!', 
+    status: 'OK',
+    database: 'MongoDB Connected',
+    endpoints: {
+      signup: 'POST /api/auth/signup',
+      login: 'POST /api/auth/login',
+      portfolios: 'GET/POST /api/portfolios'
+    }
+  });
+});
+
 // Portfolio Routes
 app.post('/api/portfolios', auth, async (req, res) => {
   try {
