@@ -10,6 +10,9 @@ services:
       - key: JWT_SECRET
         value: portfolio_builder_secret_key_2024
       - key: MONGODB_URI
-        fromDatabase:
-          name: portfolio-db
-          property: connectionString
+        value: mongodb+srv://portfolio:portfolio123@cluster0.mongodb.net/portfolio-builder?retryWrites=true&w=majority
+
+databases:
+  - name: portfolio-db
+    databaseName: portfolio-builder
+    user: portfolio

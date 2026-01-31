@@ -18,18 +18,30 @@ app.use(express.json());
 // MongoDB connection
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder', {
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-builder';
+    
+    const conn = await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
+      bufferCommands: false,
+      maxPoolSize: 10,
     });
+    
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     console.log(`📊 Database: ${conn.connection.name}`);
+    
+    // Test the connection
+    await mongoose.connection.db.admin().ping();
+    console.log('✅ MongoDB ping successful');
+    
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error.message);
-    console.log('💡 Make sure MongoDB is running: net start MongoDB');
-    process.exit(1);
+    
+    // Retry connection after 5 seconds
+    console.log('🔄 Retrying MongoDB connection in 5 seconds...');
+    setTimeout(connectDB, 5000);
   }
 };
 
@@ -204,4 +216,19 @@ if (process.env.NODE_ENV === 'production') {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('\n🛑 Shutting down gracefully...');
+  await mongoose.connection.close();
+  console.log('✅ MongoDB connection closed');
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('\n🛑 Shutting down gracefully...');
+  await mongoose.connection.close();
+  console.log('✅ MongoDB connection closed');
+  process.exit(0);
 });
